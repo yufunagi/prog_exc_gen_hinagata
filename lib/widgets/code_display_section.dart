@@ -101,7 +101,9 @@ class CodeDisplaySection extends StatelessWidget with CopyFunctionality {
                                   fontFamily: 'monospace',
                                   fontSize: 14,
                                   height: 1.4,
-                                  color: Theme.of(context).colorScheme.onSurface,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
                                 ),
                               ),
                             ),
