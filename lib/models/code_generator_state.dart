@@ -8,6 +8,7 @@ class CodeGeneratorState extends ChangeNotifier {
   String _generatedCode = '';
   bool _isLoading = false;
   String? _errorMessage;
+  bool _isInputCollapsed = false;
 
   // Getters
   List<String> get fileNames => List.unmodifiable(_fileNames);
@@ -20,6 +21,7 @@ class CodeGeneratorState extends ChangeNotifier {
   bool get canGoPrevious => _currentIndex > 0;
   String get currentFileName => hasFiles ? _fileNames[_currentIndex] : '';
   int get totalFiles => _fileNames.length;
+  bool get isInputCollapsed => _isInputCollapsed;
 
   /// 入力を解析してファイルリストを生成
   Future<void> parseInput(String input) async {
@@ -41,6 +43,8 @@ class CodeGeneratorState extends ChangeNotifier {
 
       if (_fileNames.isNotEmpty) {
         await _generateCurrentCode();
+        // 生成成功時に入力セクションを折りたたむ
+        _isInputCollapsed = true;
       } else {
         _generatedCode = '';
       }
@@ -85,7 +89,20 @@ class CodeGeneratorState extends ChangeNotifier {
     _fileNames.clear();
     _currentIndex = 0;
     _generatedCode = '';
+    _isInputCollapsed = false;
     _clearError();
+    notifyListeners();
+  }
+
+  /// 入力セクションの折りたたみ状態を切り替え
+  void toggleInputCollapse() {
+    _isInputCollapsed = !_isInputCollapsed;
+    notifyListeners();
+  }
+
+  /// 入力セクションを展開
+  void expandInput() {
+    _isInputCollapsed = false;
     notifyListeners();
   }
 

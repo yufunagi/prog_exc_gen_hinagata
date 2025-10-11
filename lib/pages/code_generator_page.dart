@@ -13,6 +13,9 @@ class CodeGeneratorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final horizontalPadding = screenWidth > 600 ? 32.0 : 16.0;
+
     return ChangeNotifierProvider(
       create: (context) => CodeGeneratorState(),
       child: Scaffold(
@@ -20,17 +23,31 @@ class CodeGeneratorPage extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(title),
         ),
-        body: const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // 入力セクション
-              CodeInputSection(),
-              SizedBox(height: 16),
-              // コード表示セクション
-              Expanded(child: CodeDisplaySection()),
-            ],
+        body: Align(
+          alignment: Alignment.topCenter,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1200),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding,
+                vertical: 16.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // 入力セクション
+                  const CodeInputSection(),
+                  const SizedBox(height: 16),
+                  // コード表示セクション（最小高さを設定）
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height * 0.3,
+                    ),
+                    child: const CodeDisplaySection(),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -50,7 +67,7 @@ mixin CopyFunctionality {
         SnackBar(
           content: Text(result.message),
           duration: const Duration(seconds: 3),
-          backgroundColor: Colors.green,
+          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         ),
       );
     } else {
@@ -62,7 +79,7 @@ mixin CopyFunctionality {
         SnackBar(
           content: Text(result.message),
           duration: const Duration(seconds: 3),
-          backgroundColor: Colors.orange,
+          backgroundColor: Theme.of(context).colorScheme.errorContainer,
         ),
       );
     }

@@ -13,9 +13,20 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'プログラム雛形生成アプリケーション',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          brightness: Brightness.light,
+        ),
         useMaterial3: true,
       ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
+      ),
+      themeMode: ThemeMode.system, // システムの設定に従う
       home: const CodeGeneratorPage(title: 'プログラム雛形生成アプリケーション'),
     );
   }

@@ -8,11 +8,14 @@ class CopyDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Row(
+      title: Row(
         children: [
-          Icon(Icons.content_copy, color: Colors.blue),
-          SizedBox(width: 8),
-          Text('コードをコピー'),
+          Icon(
+            Icons.content_copy,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          const SizedBox(width: 8),
+          const Text('コードをコピー'),
         ],
       ),
       content: SizedBox(
@@ -24,17 +27,26 @@ class CopyDialog extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.blue.shade50,
+                color: Theme.of(context).colorScheme.secondaryContainer,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.info_outline, color: Colors.blue, size: 16),
-                  SizedBox(width: 8),
+                  Icon(
+                    Icons.info_outline,
+                    color: Theme.of(context).colorScheme.secondary,
+                    size: 16,
+                  ),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       '下のコードを全選択（Ctrl+A）してコピー（Ctrl+C）してください',
-                      style: TextStyle(fontSize: 12, color: Colors.blue),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSecondaryContainer,
+                      ),
                     ),
                   ),
                 ],
@@ -46,17 +58,20 @@ class CopyDialog extends StatelessWidget {
               constraints: const BoxConstraints(maxHeight: 300),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.grey[100],
-                border: Border.all(color: Colors.grey.shade300),
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: SingleChildScrollView(
                 child: SelectableText(
                   code,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'monospace',
                     fontSize: 13,
                     height: 1.4,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ),
