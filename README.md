@@ -3,9 +3,12 @@
 [![Flutter](https://img.shields.io/badge/Flutter-3.9.2-blue.svg)](https://flutter.dev/)
 [![Dart](https://img.shields.io/badge/Dart-3.9.2-blue.svg)](https://dart.dev/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Deploy to GitHub Pages](https://github.com/yufunagi/prog_exc_gen_hinagata/workflows/Deploy%20to%20GitHub%20Pages/badge.svg)](https://github.com/yufunagi/prog_exc_gen_hinagata/actions)
 
 C言語プログラミングの授業で使用する、プログラム雛形を自動生成するFlutterアプリケーションです。  
 ファイル名を入力するだけで、Google Colabで動作する標準的なC言語のプログラムテンプレートを即座に生成できます。
+
+🌐 **[ライブデモを見る](https://yufunagi.github.io/prog_exc_gen_hinagata/)**
 
 ## ✨ 特徴
 
@@ -113,7 +116,39 @@ macos/                 # macOS固有設定
 linux/                 # Linux固有設定
 ```
 
-## 📝 ライセンス
+## � GitHub Pagesデプロイ
+
+このプロジェクトはGitHub Pagesで自動デプロイされます。
+
+### 設定手順
+
+1. **リポジトリ設定**
+   - GitHubリポジトリの「Settings」タブに移動
+   - 左サイドバーの「Pages」をクリック
+   - Source を「GitHub Actions」に設定
+
+2. **自動デプロイ**
+   - `main`ブランチにプッシュすると自動的にビルド・デプロイが実行されます
+   - デプロイ状況は「Actions」タブで確認できます
+
+3. **アクセス**
+   - デプロイ完了後、`https://yufunagi.github.io/prog_exc_gen_hinagata/` でアクセス可能
+
+### ローカルでのWebビルドテスト
+
+```bash
+# 依存関係のインストール
+flutter pub get
+
+# Webビルド実行
+flutter build web --base-href "/prog_exc_gen_hinagata/"
+
+# ローカルサーバーでテスト
+cd build/web
+python -m http.server 8000
+```
+
+## �📝 ライセンス
 
 このプロジェクトはMITライセンスの下で公開されています。詳細は[LICENSE](LICENSE)ファイルを参照してください。
 
