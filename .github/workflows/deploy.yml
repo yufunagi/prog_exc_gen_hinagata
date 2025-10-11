@@ -1,9 +1,7 @@
-name: github pages
+name: Deploy Flutter Web to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
     branches: [ main ]
   workflow_dispatch:
 
@@ -12,33 +10,49 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Repository
-        id: version
-        run: |
-          REPOSITORY=$(echo ${{ github.repository }} | sed -e "s#.*/##")
-          echo ::set-output name=repository::$REPOSITORY
-      - name: Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.35.6'
+          flutter-version: '3.35.0'
           channel: 'stable'
           cache: true
-      - run: flutter --version
-      - run: flutter pub get
-      - run: flutter build web 
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Verify Flutter installation
+        run: flutter --version
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build web
+        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web
-          
+          path: ./build/web
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
