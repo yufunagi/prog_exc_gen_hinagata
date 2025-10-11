@@ -130,7 +130,7 @@ cd build/web
 python -m http.server 8000
 ```
 
-## �📝 ライセンス
+## 📝 ライセンス
 
 このプロジェクトはMITライセンスの下で公開されています。詳細は[LICENSE](LICENSE)ファイルを参照してください。
 
