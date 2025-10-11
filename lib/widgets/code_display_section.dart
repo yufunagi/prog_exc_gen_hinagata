@@ -82,21 +82,28 @@ class CodeDisplaySection extends StatelessWidget with CopyFunctionality {
                   child: Stack(
                     children: [
                       // コード表示エリア（下層）
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          12,
-                          48,
-                          12,
-                          12,
-                        ), // 上部にボタン用のスペースを確保
-                        child: SingleChildScrollView(
-                          child: SelectableText(
-                            state.generatedCode,
-                            style: TextStyle(
-                              fontFamily: 'monospace',
-                              fontSize: 14,
-                              height: 1.4,
-                              color: Theme.of(context).colorScheme.onSurface,
+                      Positioned.fill(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            12,
+                            48,
+                            12,
+                            12,
+                          ), // 上部にボタン用のスペースを確保
+                          child: Scrollbar(
+                            thumbVisibility: true,
+                            trackVisibility: true,
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.all(8),
+                              child: SelectableText(
+                                state.generatedCode,
+                                style: TextStyle(
+                                  fontFamily: 'monospace',
+                                  fontSize: 14,
+                                  height: 1.4,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                ),
+                              ),
                             ),
                           ),
                         ),
