@@ -116,24 +116,6 @@ macos/                 # macOS固有設定
 linux/                 # Linux固有設定
 ```
 
-## � GitHub Pagesデプロイ
-
-このプロジェクトはGitHub Pagesで自動デプロイされます。
-
-### 設定手順
-
-1. **リポジトリ設定**
-   - GitHubリポジトリの「Settings」タブに移動
-   - 左サイドバーの「Pages」をクリック
-   - Source を「GitHub Actions」に設定
-
-2. **自動デプロイ**
-   - `main`ブランチにプッシュすると自動的にビルド・デプロイが実行されます
-   - デプロイ状況は「Actions」タブで確認できます
-
-3. **アクセス**
-   - デプロイ完了後、`https://yufunagi.github.io/prog_exc_gen_hinagata/` でアクセス可能
-
 ### ローカルでのWebビルドテスト
 
 ```bash
