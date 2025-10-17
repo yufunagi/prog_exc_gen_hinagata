@@ -69,6 +69,14 @@ void main() {
           );
 
           for (final code in generatedCodes) {
+            // runエントリ（実行コマンド）は '!gcc' で始まる仕様なので、その場合はCコード構造の検査をスキップ
+            if (code.startsWith('!gcc')) {
+              // runコマンド自体に不正なパスなどが含まれていないことのみ確認
+              expect(code, isNot(contains('..')));
+              expect(code, isNot(contains('/')));
+              continue;
+            }
+
             // 生成されたコードに危険なパターンが含まれていないか確認
             expect(code, isNot(contains('system(')), reason: 'システムコール実行の可能性');
             expect(code, isNot(contains('exec(')), reason: 'コマンド実行の可能性');
@@ -141,6 +149,13 @@ void main() {
           );
 
           for (final code in codes) {
+            // runエントリはスキップして検査
+            if (code.startsWith('!gcc')) {
+              expect(code, isNot(contains('..')));
+              expect(code, isNot(contains('/')));
+              continue;
+            }
+
             // 生成されたコードが予期された構造のみを含むか確認
             expect(code, contains('%%file'));
             expect(code, contains('#include <stdio.h>'));
