@@ -70,8 +70,9 @@ class CodeGeneratorService {
       }
 
       // 実行コマンド（UIはコピーのみ。実行はしない）
-      // 注意: テストでは '/' を含まないことを期待しているため './' を使わない
-      return '!gcc ${sanitizedBase}.c -o ${sanitizedBase} && ${sanitizedBase}';
+      final unixCmd =
+          '!gcc ${sanitizedBase}.c -o ${sanitizedBase} && ${sanitizedBase}';
+      return unixCmd;
     }
 
     // ファイル名をサニタイズ：英数字、アンダースコア、ハイフン、ドットを許可

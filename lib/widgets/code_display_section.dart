@@ -15,6 +15,7 @@ class _CodeDisplaySectionState extends State<CodeDisplaySection>
     with CopyFunctionality {
   final ScrollController _scrollController = ScrollController();
   bool _showRunCommand = false;
+  int? _lastIndex;
 
   @override
   void dispose() {
@@ -26,6 +27,12 @@ class _CodeDisplaySectionState extends State<CodeDisplaySection>
   Widget build(BuildContext context) {
     return Consumer<CodeGeneratorState>(
       builder: (context, state, child) {
+        // ナビゲーションで index が変わった場合は常にコード表示に戻す
+        if (_lastIndex != null && _lastIndex != state.currentIndex) {
+          // build 中に setState を呼ばない（既に rebuild 中なので直接更新して問題なし）
+          _showRunCommand = false;
+        }
+        _lastIndex = state.currentIndex;
         if (!state.hasFiles) {
           return Center(
             child: Text(
