@@ -38,6 +38,8 @@ class CodeGeneratorState extends ChangeNotifier {
         return;
       }
 
+      // UI では各ファイル名ごとに「実行コマンド」エントリも表示したいので
+      // 内部的に元の名前リストから拡張した一覧を保持する。
       _fileNames = validationResult.fileNames ?? [];
       _currentIndex = 0;
 
@@ -59,6 +61,8 @@ class CodeGeneratorState extends ChangeNotifier {
   Future<void> nextCode() async {
     if (canGoNext) {
       _currentIndex++;
+      // UI 層に表示モードのリセットを促すために通知だけ先に出す
+      notifyListeners();
       await _generateCurrentCode();
     }
   }
@@ -67,6 +71,8 @@ class CodeGeneratorState extends ChangeNotifier {
   Future<void> previousCode() async {
     if (canGoPrevious) {
       _currentIndex--;
+      // UI 層に表示モードのリセットを促すために通知だけ先に出す
+      notifyListeners();
       await _generateCurrentCode();
     }
   }
