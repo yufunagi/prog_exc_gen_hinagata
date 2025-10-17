@@ -2,9 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/code_generator_state.dart';
 import '../pages/code_generator_page.dart';
+import '../services/code_generator_service.dart';
 
-class CodeDisplaySection extends StatelessWidget with CopyFunctionality {
+class CodeDisplaySection extends StatefulWidget {
   const CodeDisplaySection({super.key});
+
+  @override
+  State<CodeDisplaySection> createState() => _CodeDisplaySectionState();
+}
+
+class _CodeDisplaySectionState extends State<CodeDisplaySection>
+    with CopyFunctionality {
+  final ScrollController _scrollController = ScrollController();
+  bool _showRunCommand = false;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +72,7 @@ class CodeDisplaySection extends StatelessWidget with CopyFunctionality {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    '現在のファイル: ${state.currentFileName}',
+                    '現在のファイル: ${_displayFileName(state.currentFileName)}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.onSecondaryContainer,
@@ -91,12 +107,18 @@ class CodeDisplaySection extends StatelessWidget with CopyFunctionality {
                             12,
                           ), // 上部にボタン用のスペースを確保
                           child: Scrollbar(
+                            controller: _scrollController,
                             thumbVisibility: true,
                             trackVisibility: true,
                             child: SingleChildScrollView(
+                              controller: _scrollController,
                               padding: const EdgeInsets.all(8),
                               child: SelectableText(
-                                state.generatedCode,
+                                _showRunCommand
+                                    ? CodeGeneratorService.generateCCode(
+                                        '${state.currentFileName}::run',
+                                      )
+                                    : state.generatedCode,
                                 style: TextStyle(
                                   fontFamily: 'monospace',
                                   fontSize: 14,
@@ -133,12 +155,40 @@ class CodeDisplaySection extends StatelessWidget with CopyFunctionality {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
+                              // 表示切替（コード <-> 実行コマンド）ボタン
+                              IconButton(
+                                onPressed: () {
+                                  setState(
+                                    () => _showRunCommand = !_showRunCommand,
+                                  );
+                                },
+                                icon: Icon(
+                                  _showRunCommand
+                                      ? Icons.code_off
+                                      : Icons.play_arrow,
+                                  size: 18,
+                                ),
+                                tooltip: _showRunCommand
+                                    ? 'コード表示に戻す'
+                                    : '実行コマンドを表示',
+                                padding: const EdgeInsets.all(4),
+                                constraints: const BoxConstraints(
+                                  minWidth: 32,
+                                  minHeight: 32,
+                                ),
+                              ),
+
                               // コピーボタン
                               IconButton(
-                                onPressed: () => copyToClipboard(
-                                  context,
-                                  state.generatedCode,
-                                ),
+                                onPressed: () {
+                                  final fileName = state.currentFileName;
+                                  final displayText = _showRunCommand
+                                      ? CodeGeneratorService.generateCCode(
+                                          '$fileName::run',
+                                        )
+                                      : state.generatedCode;
+                                  copyToClipboard(context, displayText);
+                                },
                                 icon: const Icon(Icons.content_copy, size: 18),
                                 tooltip: 'コピー',
                                 padding: const EdgeInsets.all(4),
@@ -185,5 +235,14 @@ class CodeDisplaySection extends StatelessWidget with CopyFunctionality {
         );
       },
     );
+  }
+
+  String _displayFileName(String fileName) {
+    const runSuffix = '::run';
+    if (fileName.endsWith(runSuffix)) {
+      final base = fileName.substring(0, fileName.length - runSuffix.length);
+      return '$base (実行コマンド)';
+    }
+    return fileName;
   }
 }

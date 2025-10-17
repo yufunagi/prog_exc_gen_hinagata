@@ -38,6 +38,8 @@ class CodeGeneratorState extends ChangeNotifier {
         return;
       }
 
+      // UI では各ファイル名ごとに「実行コマンド」エントリも表示したいので
+      // 内部的に元の名前リストから拡張した一覧を保持する。
       _fileNames = validationResult.fileNames ?? [];
       _currentIndex = 0;
 

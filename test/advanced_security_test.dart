@@ -83,6 +83,13 @@ void main() {
                 result.fileNames!,
               );
               for (final code in codes) {
+                // runエントリは '!gcc' で始まる実行コマンド文字列を返す仕様なので、その場合はC構造の検査をスキップ
+                if (code.startsWith('!gcc')) {
+                  expect(code, isNot(contains('..')));
+                  expect(code, isNot(contains('/')));
+                  continue;
+                }
+
                 // 生成されたコードが標準的なC言語構文のみを含むことを確認
                 expect(code, contains('%%file'));
                 expect(code, contains('#include <stdio.h>'));
